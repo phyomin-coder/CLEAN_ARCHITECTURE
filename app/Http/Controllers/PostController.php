@@ -18,8 +18,7 @@ class PostController extends Controller
     }
     
     public function index(Request $request) 
-    { 
-        return $request;
+    {  
         $response=$this->postService->getAll($request); 
         return $this->response($response["data"], $response["count"],true);
     }

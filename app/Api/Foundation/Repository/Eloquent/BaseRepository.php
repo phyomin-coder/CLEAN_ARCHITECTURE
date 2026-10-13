@@ -91,11 +91,11 @@ abstract class BaseRepository implements EloquentRepositoryInterface
      * @param array $relations
      * @return Builder|Model|object|null
      */
-    public function getDataById(int $id, array $relations = [])
+    public function getDataById(int|string $id, array $relations = [])
     {
         return $this->connection()->query()->with($relations)->where('id', $id)->first();
     }
-
+ 
     /**
      * Execute the query and get the first result with first().
      *
@@ -137,7 +137,7 @@ abstract class BaseRepository implements EloquentRepositoryInterface
      * @param int $id
      * @return int
      */
-    public function update(array $data, int $id): int
+    public function update(array $data, int|string $id): int
     {
         return $this->connection()->query()->find($id)->update($data);
     }
@@ -177,7 +177,7 @@ abstract class BaseRepository implements EloquentRepositoryInterface
      * @param int $id
      * @return mixed
      */
-    public function destroy(int $id)
+    public function destroy(int|string $id)
     {
         return $this->connection()->query()->find($id)->delete();
     }
