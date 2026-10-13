@@ -26,7 +26,7 @@ class UpdatePostRequest extends FormRequest
             'title' => [
                 'required',
                 'min:5',
-                Rule::unique('posts','title')->ignore($this->route('blog')),
+                Rule::unique('posts','title')->ignore($this->route('post')),
             ],
             'description' => 'required|string|min:5|max:255'
         ];
