@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Api\Foundation\Routing\Controller;
-use App\Http\Requests\Admin\StorePostRequest;
-use App\Http\Requests\Admin\UpdatePostRequest;
-use App\Services\Admin\PostService;
+use App\Http\Requests\Post\StorePostRequest;
+use App\Http\Requests\Post\UpdatePostRequest;
+use App\Services\Post\PostService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -17,8 +17,9 @@ class PostController extends Controller
         $this->postService = $postService;
     }
     
-    public function index(Request $request) : JsonResponse
+    public function index(Request $request) 
     { 
+        return $request;
         $response=$this->postService->getAll($request); 
         return $this->response($response["data"], $response["count"],true);
     }

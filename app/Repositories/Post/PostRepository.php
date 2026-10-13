@@ -1,5 +1,5 @@
 <?php
-namespace App\Repositories\Admin;
+namespace App\Repositories\Post;
 
 use App\Api\Foundation\Repository\Eloquent\BaseRepository;
 use App\Models\Post;

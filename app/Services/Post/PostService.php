@@ -1,10 +1,10 @@
 <?php
-namespace App\Services\Admin;
+namespace App\Services\Post;
 
 use App\Api\Foundation\Exceptions\NotFoundResourceException;
 use App\Http\Resources\PostResource;
 use App\Models\Post;
-use App\Repositories\Admin\PostRepositoryInterface;
+use App\Repositories\Post\PostRepositoryInterface;
 use App\Services\CommonService;
 use Exception;
 use Illuminate\Http\Request;
@@ -21,7 +21,6 @@ class PostService extends CommonService{
         $data = ['data' => [], 'count' => 0];
         $params = $this->params($request);
         $params = array_merge($params, $this->getFilterParams($request));
-
         $posts = $this->postRepository->all($params);
 
         if ($posts->isNotEmpty()) {
