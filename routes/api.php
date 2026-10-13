@@ -4,6 +4,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\PostController;
 
 // Public routes
 Route::post('/user/login', [AuthController::class, 'userLogin']);
@@ -21,4 +22,5 @@ Route::prefix('admin')->middleware(['auth:sanctum'])->group(function () {
 
     Route::apiResource('admins', AdminController::class);
     Route::post('/logout', [AuthController::class, 'logout']);
+    Route::apiResource('posts', PostController::class);
 });

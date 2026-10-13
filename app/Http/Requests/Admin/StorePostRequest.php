@@ -1,0 +1,40 @@
+<?php
+
+namespace App\Http\Requests\Admin;
+
+use Illuminate\Foundation\Http\FormRequest;
+
+class StorePostRequest extends FormRequest
+{
+    /**
+     * Determine if the user is authorized to make this request.
+     */
+    public function authorize(): bool
+    {
+        return true;
+    }
+
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     */
+    public function rules(): array
+    {
+        return [
+            'title' => 'required|min:5|unique:posts,title',
+            'description' => 'required|string|min:5|max:255'
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'title.required' => 'The title field is required.',
+            'title.min' => 'The title must be at least 5 characters.',
+            'title.unique' => 'This title is already in use.',
+            'description.required' => 'The description field is required.', 
+            'description.max' => 'The description field must be at most 255 characters.', 
+        ];
+    }
+}
