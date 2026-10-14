@@ -30,8 +30,8 @@ class ToDoController extends Controller
      */
 public function store(StoreToDoRequest $request) : JsonResponse
     {
-    $post = $this->toDoService->createToDo($request);
-    return $this->response(array($post));
+    $todo = $this->toDoService->createToDo($request);
+    return $this->response(array($todo));
     }
 
     /**

@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Services\ToDo;
 
 use App\Api\Foundation\Exceptions\NotFoundResourceException;
@@ -9,16 +10,21 @@ use Exception;
 use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\DB;
-class ToDoService extends CommonService{
+
+class ToDoService extends CommonService
+{
     protected ToDoRepositoryInterface $toDoRepository;
     public function __construct(ToDoRepositoryInterface $toDoRepository)
     {
         $this->toDoRepository = $toDoRepository;
     }
-    public function getAllToDo($request){
+    public function getAllToDo($request)
+    {
         $data = ['data' => [], 'count' => 0];
         $params = $this->params($request);
         $params = array_merge($params, $this->getFilterParams($request));
+
+        $params['with'] = ['creator', 'updater'];
         $todos = $this->toDoRepository->all($params);
 
         if ($todos->isNotEmpty()) {
@@ -32,10 +38,11 @@ class ToDoService extends CommonService{
         return $data;
     }
 
-    public function createToDo(Request $request){
-        $input=$this->input($request,$this->toDoRepository->connection()->getFillable());
-        $created_by= auth()->id();
-        $input['created_by']=$created_by;
+    public function createToDo(Request $request)
+    {
+        $input = $this->input($request, $this->toDoRepository->connection()->getFillable());
+        $created_by = auth()->id();
+        $input['created_by'] = $created_by;
         try {
             DB::beginTransaction();
 
@@ -43,7 +50,7 @@ class ToDoService extends CommonService{
 
             $input = array_merge($input, $prepareInput);
 
-            $post = $this->toDoRepository->insert($input); 
+            $post = $this->toDoRepository->insert($input);
 
             DB::commit();
         } catch (Exception $e) {
@@ -53,18 +60,21 @@ class ToDoService extends CommonService{
 
         return ['stored' => true];
     }
-    public function getToDoById($id){
-         $todo = $this->toDoRepository->getDataById($id);
+    public function getToDoById(string $id)
+    {
+        $relations = ['creator', 'updater'];
+        $todo = $this->toDoRepository->getDataById($id, $relations);
         if (!$todo) {
             throw new NotFoundResourceException();
         }
-        return $todo;
+        return (new ToDoResource($todo));
     }
 
-    public function updateToDo(Request $request, $id) : mixed{
-         $input = $this->input($request, $this->toDoRepository->connection()->getFillable());
-        $updated_by= auth()->id();
-        $input['updated_by']=$updated_by;
+    public function updateToDo(Request $request, string $id): mixed
+    {
+        $input = $this->input($request, $this->toDoRepository->connection()->getFillable());
+        $updated_by = auth()->id();
+        $input['updated_by'] = $updated_by;
         try {
             DB::beginTransaction();
 
@@ -75,7 +85,7 @@ class ToDoService extends CommonService{
             $this->toDoRepository->update($input, $id);
 
             $todo = $this->getToDoById($id);
- 
+
 
             DB::commit();
         } catch (Exception $e) {
@@ -87,7 +97,7 @@ class ToDoService extends CommonService{
         return (new ToDoResource($todo))->toArray($request);
     }
 
-    public function deleteToDo($id) : array
+    public function deleteToDo($id): array
     {
         $todo = $this->getToDoById($id);
 
@@ -104,31 +114,5 @@ class ToDoService extends CommonService{
         }
 
         return ['deleted' => true];
-    }
-     protected function getFilterParams(Request $request, $wantFilter = true): array
-    {
-        $params = [];
-
-        if ($request->filled(key: 'search')) {
-            $params['search'] = $request->get(key: 'search');
-        }
-
-        if ($request->filled(key: 'type')) {
-            $params['type'] = $request->get(key: 'type');
-        }
-
-        if ($request->filled(key: 'filter') && !empty($request->get(key: 'filter')) && $wantFilter) {
-            $params['filter'] = (int)$request->get(key: 'filter');
-        }
-
-        if ($request->filled(key: 'sort_by')) {
-            $params['sort_by'] = $request->get(key: 'sort_by');
-        }
-
-        if ($request->filled(key: 'order_by')) {
-            $params['order_by'] = $request->get(key: 'order_by');
-        }
-
-        return $params;
     }
 }

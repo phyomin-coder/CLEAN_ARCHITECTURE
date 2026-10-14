@@ -41,7 +41,7 @@ class CommonService
     {
         $input = [];
 
-        if($request->hasFile('image')) {
+        if ($request->hasFile('image')) {
             $image = $request->file('image');
             $input['image'] = str_replace('public/thumbnails/', '', $image->store('public/thumbnails'));
         }
@@ -114,5 +114,24 @@ class CommonService
         $guards = collect(array_values(config('helper.guards')));
 
         return $guards->first(fn($guard) => auth($guard)->check());
+    }
+
+    protected function getFilterParams(Request $request, $wantFilter = true): array
+    {
+        $params = [];
+
+        if ($request->filled(key: 'search')) {
+            $params['search'] = $request->get(key: 'search');
+        }
+
+        if ($request->filled(key: 'sort_by')) {
+            $params['sort_by'] = $request->get(key: 'sort_by');
+        }
+
+        if ($request->filled(key: 'order_by')) {
+            $params['order_by'] = $request->get(key: 'order_by');
+        }
+
+        return $params;
     }
 }
