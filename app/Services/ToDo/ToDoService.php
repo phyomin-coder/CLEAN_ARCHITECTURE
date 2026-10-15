@@ -41,8 +41,6 @@ class ToDoService extends CommonService
     public function createToDo(Request $request)
     {
         $input = $this->input($request, $this->toDoRepository->connection()->getFillable());
-        $created_by = auth()->id();
-        $input['created_by'] = $created_by;
         try {
             DB::beginTransaction();
 
@@ -73,8 +71,6 @@ class ToDoService extends CommonService
     public function updateToDo(Request $request, string $id): mixed
     {
         $input = $this->input($request, $this->toDoRepository->connection()->getFillable());
-        $updated_by = auth()->id();
-        $input['updated_by'] = $updated_by;
         try {
             DB::beginTransaction();
 
