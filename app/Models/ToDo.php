@@ -8,10 +8,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 use App\Models\Admin;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class ToDo extends Model
 {
-    use HasFactory, HasUuids, TracksUserActivity;
+    use HasFactory, HasUuids, TracksUserActivity, SoftDeletes;
     protected $fillable = [
         'job',
         'description',
